@@ -23,7 +23,7 @@ export default function About() {
               <li>Tailwind CSS</li>
               <li>daisyUI</li>
             </ul>
-          </div>{" "}
+          </div>
         </div>
       </div>
       <div className="xs:w-11/12 md:w-4/6 container m-auto py-6">

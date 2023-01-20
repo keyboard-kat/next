@@ -1,10 +1,9 @@
 import Link from "next/link";
 import type { InferGetServerSidePropsType } from "next";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import CommentForm from "./form";
 import Image from "next/image";
-import photo from "../../public/death_valley.jpg";
+import photo from "../public/death_valley.jpg";
 
 export default function Comments({
   comments,
@@ -19,9 +18,9 @@ export default function Comments({
 
   useEffect(() => {
     setIsRefreshing(false);
-  }, [comments]);
+  }, [comments, isRefreshing]);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       await fetch(`${process.env.NEXT_PUBLIC_COMMENTS_API}`, {
@@ -46,17 +45,44 @@ export default function Comments({
         <div className="hero-content ">
           <div className="rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5 overflow-hidden">
             <Image src={photo} alt="Picture of Death Valley" width={780} placeholder="blur" />
-
             <div className="relative mt-4 flex-col lg:flex-row px-8">
               <h1 className="text-slate-900 font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight   ">
                 Have any feedback?
               </h1>
-
               <p className="mt-6 text-xl text-slate-700 font-light max-w-4xl mx-auto leading-relaxed tracking-wide pb-3  ">
                 Write a comment below.
               </p>
             </div>
-            <CommentForm onSubmit={onSubmit} formVals={formVals} setFormVals={setFormVals} />
+            <form onSubmit={onSubmit} className="px-8 py-5 bg-indigo-100  ">
+              <div className="py-1 ">
+                <label className="">Name</label>
+                <input
+                  type="text"
+                  className="flex w-full h-9 p-1 rounded resize-y placeholder-gray-500
+                 focus:outline-offset-1 focus:outline-1 focus:outline-indigo-400"
+                  onChange={(e) => setFormVals({ ...formVals, name: e.target.value })}
+                />
+              </div>
+              <div className="py-1">
+                <label>Comment</label>
+                <textarea
+                  className="flex w-full max-h-16 p-1 rounded resize-y placeholder-gray-500
+                focus:outline-offset-1 focus:outline-1 focus:outline-indigo-400"
+                  onChange={(e) => setFormVals({ ...formVals, comment: e.target.value })}
+                />
+              </div>
+
+              <div className="flex items-center mt-4">
+                <button
+                  type="submit"
+                  disabled={!formVals.name || !formVals.comment}
+                  className="btn btn-primary text-white max-h-8
+                "
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
             <section>
               <div className="container divide-y divide-slate-100">
                 <header className="px-8 py-4  ">
